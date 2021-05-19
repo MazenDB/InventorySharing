@@ -130,19 +130,15 @@ contract SupplierOrderManagement{
     }  
     
     
-    constructor(address inventoryAddress,address registrationAddress)public {
-        inventoryContract=SupplierInventory(inventoryAddress);
+    constructor(address registrationAddress)public {
         registrationContract=Registration(registrationAddress);
 
-        require (inventoryContract.isOwner(msg.sender),
-        "The sender is not the owoner of the inventory contract");
-        
-        
         owner=msg.sender;
     }
     
     
-    function PurchaseOrder(uint itemNum, uint quantityOrdered) public onlyRetailer{
+    function PurchaseOrder(address inventoryAddress, uint itemNum, uint quantityOrdered) public onlyRetailer{
+        inventoryContract=SupplierInventory(inventoryAddress);
         uint quantityAvailable=inventoryContract.inventoryAvailability(itemNum);
         
         require(quantityOrdered<=quantityAvailable,
